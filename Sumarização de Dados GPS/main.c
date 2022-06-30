@@ -1,3 +1,4 @@
+#define _DEFAULT_SOURCE
 #include "leitura.h"
 
 int main(int argc, char **argv){
@@ -8,7 +9,6 @@ int main(int argc, char **argv){
   if (strcmp(argv[1],"-d") == 0)
     strcat(diretorio,argv[2]);
 
-  printf("%s\n", diretorio);
   ler_diretorio(diretorio);
 
   return 0;
