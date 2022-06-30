@@ -1,16 +1,15 @@
 CFLAGS = -Wall -g
-LIBS = -lm
 
 all: main
 
 main: main.o leitura.o
-	gcc main.o leitura.o -o main $(LIBS)
+	gcc -std=c99 main.o leitura.o -o main
 
 leitura.o: leitura.c leitura.h
-	gcc -c leitura.c $(CFLAGS)
+	gcc -c  -std=c99 leitura.c $(CFLAGS)
 
 main.o : main.c 
-	gcc -c main.c  $(CFLAGS)
+	gcc -c -std=c99 main.c  $(CFLAGS)
 
 clean:
 	rm -rf ./*.o
