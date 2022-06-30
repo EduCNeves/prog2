@@ -6,7 +6,7 @@
 #include <string.h>
 #include "leitura.h"
 
-#define MAX 64
+#define LINESIZE 1024
 
 /*
 void ler_todo_arquivo(){
@@ -22,11 +22,29 @@ void ler_todo_arquivo(){
 
 }*/
 
+
+
+//alocando a vetor
+void alocacao_vetor(lista_t *orig){
+
+  int i,j;
+  //alocando a matriz
+  orig->img = malloc (orig->altura * sizeof (unsigned char*)); 
+  for (i=0; i < orig->altura; i++)
+    orig->img[i] = malloc (orig->coluna * sizeof (unsigned char));
+
+  //zerando a matriz
+  for (i=0; i < orig->altura; i++)
+    for (j=0; j < orig->coluna; j++)
+      orig->img[i][j] = 0;  
+
+}
+
 void ler_arquivo (char* log){
 
   FILE *arq ;
   int i ;
-  char *line = malloc (sizeof(char)*MAX);
+  char *line = malloc (sizeof(char)*LINESIZE);
  
   // abre o arquivo em leitura
   arq = fopen (log, "r") ;
@@ -37,8 +55,8 @@ void ler_arquivo (char* log){
 
   
   //mostra o cabeçario de cada bicicleta 
-  for (i=0; i<3; i++){
-    fgets (line, MAX, arq);
+  for (i=0; i<1; i++){
+    fgets (line, LINESIZE, arq);
     printf ("%s", line);
   }
  
@@ -50,7 +68,7 @@ void ler_diretorio(char *diretorio){
 
   DIR *dirstream;
   struct dirent *direntry;
-  char *arquivo = malloc (sizeof(char)*MAX);
+  char *arquivo = malloc (sizeof(char)*LINESIZE);
  
   // abre um diretório
   dirstream = opendir (diretorio);
