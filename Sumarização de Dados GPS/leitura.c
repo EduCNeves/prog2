@@ -1,3 +1,4 @@
+#define _DEFAULT_SOURCE
 #include <stdio.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -25,7 +26,7 @@ void ler_arquivo (char* log){
 
   FILE *arq ;
   int i ;
-  char *line = malloc (sizeof(char)*64);
+  char *line = malloc (sizeof(char)*MAX);
  
   // abre o arquivo em leitura
   arq = fopen (log, "r") ;
@@ -35,6 +36,7 @@ void ler_arquivo (char* log){
   }
 
   
+  //mostra o cabeçario de cada bicicleta 
   for (i=0; i<3; i++){
     fgets (line, MAX, arq);
     printf ("%s", line);
@@ -48,7 +50,7 @@ void ler_diretorio(char *diretorio){
 
   DIR *dirstream;
   struct dirent *direntry;
-  char *arquivo = malloc (sizeof(char)*64);
+  char *arquivo = malloc (sizeof(char)*MAX);
  
   // abre um diretório
   dirstream = opendir (diretorio);
@@ -77,19 +79,4 @@ void ler_diretorio(char *diretorio){
    // fecha o diretório
    (void) closedir (dirstream);
 
-}
-
-
-int main(int argc, char **argv){
-
-  char *diretorio = malloc (sizeof(char)*64);
-  strcpy(diretorio, "./");
-
-  if (strcmp(argv[1],"-d") == 0)
-    strcat(diretorio,argv[2]);
-
-  printf("%s\n", diretorio);
-  ler_diretorio(diretorio);
-
-  return 0;
 }
