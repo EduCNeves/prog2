@@ -8,10 +8,8 @@ int main(int argc, char **argv){
   cont.quantidade_log = 0;
 
 
-  //int quantidade_log = 0;
   char d_home[LINESIZE];
   struct dirent **nome_log;
-  //int cont_bike = 0;
 
   char *diretorio = malloc (sizeof(char)*64);
   strcpy(diretorio, "./");
@@ -32,34 +30,32 @@ int main(int argc, char **argv){
   cont.quantidade_log = scandir(".", &nome_log, filtro, alphasort);
 
   if (cont.quantidade_log <= 0){
-    fprintf("Erro quantidade_log");
+    fprintf(stderr, "Erro quantidade_log");
     return 1;
   }
 
   //alocando vetor de bikes
   Bicicleta_t *bikes = malloc(sizeof(Bicicleta_t)*cont.quantidade_log);
-  for (int i; i<cont.quantidade_log; i++){
+  for (int i=0; i<cont.quantidade_log; i++){
     bikes[i].nome_bike = malloc (sizeof(char)*LINESIZE);
+    //printf("%p\n", bikes[i].nome_bike);
     bikes[i].informacoes = malloc (sizeof(log_t)*cont.quantidade_log);
-    bikes[i].cont_data = 0;
+    bikes[i].cont_log = 0;
   }
-
 
   //leitura de arquivos
-  ler_arquivos(nome_log, bikes, cont);
-
-  while (imiprir_menu()){
+  ler_arquivos(nome_log, bikes, &cont);
+  for (int i = 0; i < cont.cont_bike; i++){
+    printf("%s\n", bikes[i].nome_bike);
+    printf(" quantidades de logs:%d\n", bikes[i].cont_log);
+    for (int l = 0; l < bikes[i].cont_log; l++){
+      printf("%s\n", bikes[i].informacoes[l].nome_log); 
+    }
     
   }
+  printf("\n");
+  printf(" total de arquivos:%d\n", cont.quantidade_log);
+  printf(" total de bikes:%d\n", cont.cont_bike);
   
-
-  // Bicicleta_t bike;
-  // alocacao_vetor(&bike);
-  // ler_diretorio(diretorio, bikes, &quantidade_log);
-  // for (int 
-  //   i=0; i<1; i++){
-  //   printf ("%s\n", nome);
-  // }
-
   return 0;
 }

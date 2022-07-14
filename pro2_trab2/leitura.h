@@ -6,24 +6,26 @@
 #include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define LINESIZE 1024
 
-typedef struct Log_t {
+typedef struct log_t {
 
-    struct dirent **nome_log;
+    char nome_log[100];
     char data[50];
-    // int altitude;
-    // int cadence;
+    /*
+    int altitude;
+    int cadence;
     int distance;
     int vel_med;
     int vel_max;
     int hr_med;
     int hr_max;
     int cad_med;
-    int subida_acumulada;
+    double subida_acumulada;*/
 
-}Log_t;
+}log_t;
 
 
 typedef struct Bicicleta_t {
@@ -37,12 +39,16 @@ typedef struct Bicicleta_t {
 typedef struct contadores_t{
     
     int quantidade_log;
-    int cont_bike = 0;
+    int cont_bike;
 
 }contadores_t;
 
 
-void ler_arquivo (char* log, char *nome);
-void ler_diretorio(char *diretorio, char *nome);
+
+
+void ler_arquivos (struct dirent **arquivos, Bicicleta_t *bikes, contadores_t *cont);
+int filtro (const struct dirent *dir);
+int checar_nome_bike(Bicicleta_t *bikes, contadores_t *cont, char *nome);
+void adicionar_bike(Bicicleta_t *bikes, contadores_t *cont, char *nome, int aux);
      
 #endif

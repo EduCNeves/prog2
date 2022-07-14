@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "leitura.h"
 #include "contas.h"
 
@@ -35,8 +36,7 @@ void alocacao_vetor(Bicicleta_t *bike){
       orig->img[i][j] = 0;  
 }*/
 
-
-
+/*
 int imiprir_menu(){
 
     printf("0.Digite '0' para sair");
@@ -76,81 +76,69 @@ int imiprir_menu(){
     }
     
 
-}
+}*/
 
-void adicionar_bike(Bicicleta_t *bikes, int cont_bike, char *nome){
+void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo){
 
-
-    strcpy(bikes[i]->nome_bike,nome);
-    cont_bike++;
-    bikes[]
-
-
+  strcpy(bikes[aux].informacoes[bikes[aux].cont_log].nome_log,arquivo);
+  bikes[aux].cont_log++;
 
 }
 
-int checar_nome_bike(Bicicleta_t *bikes, contadores_t cont, char *nome){
+void adicionar_bike(Bicicleta_t *bikes, contadores_t *cont, char *nome, int aux){
+
+  strcpy(bikes[aux].nome_bike,nome);
+  cont->cont_bike++;
+
+}
+
+int checar_nome_bike(Bicicleta_t *bikes, contadores_t *cont, char *nome){
 
   int i;
-  if (cont.cont_bike = 0){//ver se esta vazio
-    return 0;
+  if (cont->cont_bike == 0){//ver se esta vazio
+    return 1;
   }
   else {
-    for (i = 0; i < cont.cont_bike; i++){
-      if (strcmp(bike[i]->nome_bike,nome)){ //existe um igual
-        add_log:();
+    for (i = 0; i < cont->cont_bike; i++){
+      if (!strcmp(bikes[i].nome_bike,nome)){ //existe um igual
+        return i;
       }
     }   
   }
-  return i++
-
-
-
-  /*
-  for(int i=0; i < quantidade_log; i++){
-    if (bike[i]->nome_bike == NULL){ //ver se esta vazio
-        return i;
-    }
-    if (strcmp(bike[i]->nome_bike,nome)){ //existe um igual
-      return i;
-    }
-  }*/
-  
+  return i+1;
 
 }
 
 
-
-void ler_arquivos (struct dirent **arquivos, Bicicleta_t *bikes, contadores_t cont){
+void ler_arquivos (struct dirent **arquivos, Bicicleta_t *bikes, contadores_t *cont){
 
   FILE *arq;
-  int i,aux;
+  int i,aux = 0;
   char *line = malloc (sizeof(char)*LINESIZE);
  
   // abre o arquivo em leitura
-  for(i=0; i< quantidade_log; i++ ){
+  for(i=0; i < cont->quantidade_log; i++ ){
     arq = fopen (arquivos[i]->d_name, "r") ;
     if ( !arq ){
-      perror ("Erro ao abrir arquivo TESTE_AQUI") ;
+      perror ("Erro ao abrir arquivo") ;
       exit (1) ;
     }
 
-    char pt[50];
+    char pt[cont->quantidade_log];
 
-    //mostra o cabeçario de cada bicicleta 
-    //for (i=0; i<1; i++){
       fgets (line, LINESIZE, arq);
       strtok(line, ":");
       strcpy(pt,strtok(NULL,"\n"));
       aux = checar_nome_bike(bikes, cont, pt);
-      if (aux == 0 or aux < cont.cont_bike){
-        adicionar_bike(bikes,cont,pt,aux);  
+      if ( aux > cont->cont_bike){
+        adicionar_bike(bikes,cont,pt,aux-1);
+        adicionar_log(bikes,aux-1,arquivos[i]->d_name);  
       }
-      else if (aux ){
-        add_log();
+      else {
+        adicionar_log(bikes,aux,arquivos[i]->d_name);
       }
       
-
+      /*
       fgets (line, LINESIZE, arq);
       strtok(line, ":");
       strcpy(bikes->informacoes->data,strtok(NULL,","));//arrumar a data
@@ -158,21 +146,12 @@ void ler_arquivos (struct dirent **arquivos, Bicicleta_t *bikes, contadores_t co
       //altitude
       fgets (line, LINESIZE, arq);
       pt = strtok(line, ":");
-      if(strcmp(pt,"altitude")){
+      if(!strcmp(pt,"altitude")){
+        pt = strtok(NULL,":")
+        sscanf(, "%lf", &bike->subida_acumulada);
         strcpy(,strtok(NULL,"m"));
-      }
+      }*/
 
-
-
-
-
-
-
-
-     
-    //strcpy(b,pt);
-      /*printf ("%s\n", nome);*/
-    //}
     
     // fecha o arquivo
     fclose (arq) ;
