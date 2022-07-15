@@ -78,9 +78,95 @@ int imiprir_menu(){
 
 }*/
 
-void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo){
+int flag = 1;
+
+void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq){
 
   strcpy(bikes[aux].informacoes[bikes[aux].cont_log].nome_log,arquivo);
+
+  char *line = malloc (sizeof(char)*LINESIZE);
+  int i;
+  char *pt, *ano, *mes, *dia, *tempo, *h, *m, *s;
+  int segundos,horas, minutos, hr;
+  double distance,vel,alt_novo,alt_velho;
+
+  fgets (line, LINESIZE, arq) ;
+  while (! feof (arq)){
+    
+    pt = strtok(line, ": ");
+
+    if (!strcmp(pt,"timestamp")){
+      
+      pt = strtok(NULL," ");
+      tempo = strtok(NULL," ");
+      
+      //pegando a data
+      ano = strtok(pt,"-");
+      mes = strtok(NULL,"-");
+      dia = strtok(NULL,"-");
+      strcpy(bikes[aux].informacoes[bikes[aux].cont_log].data,ano);
+      strcat(bikes[aux].informacoes[bikes[aux].cont_log].data,"/");
+      strcat(bikes[aux].informacoes[bikes[aux].cont_log].data,mes);
+      strcat(bikes[aux].informacoes[bikes[aux].cont_log].data,"/");
+      strcat(bikes[aux].informacoes[bikes[aux].cont_log].data,dia);
+      
+      //pegando o tempo
+      h = strtok(tempo,":");
+      horas = atoi(h);
+      horas = horas*3600;
+      m = strtok(NULL,":");
+      minutos = atoi(m);
+      minutos = minutos*60;
+      s = strtok(NULL,":");
+      segundos = atoi(s);
+      segundos = horas+minutos+segundos;
+
+      bikes[aux].informacoes[bikes[aux].cont_log].tempo = segundos;
+
+    }
+    if (!strcmp(pt,"distance")){
+      pt = strtok(NULL," ");
+      distance = atof(pt);
+      bikes[aux].informacoes[bikes[aux].cont_log].distance = distance/1000;
+    }
+
+    if (!strcmp(pt,"heart_rate")){
+      pt = strtok(NULL," ");
+      hr = atoi(pt);
+      if (bikes[aux].informacoes[bikes[aux].cont_log].hr_max < hr){
+          bikes[aux].informacoes[bikes[aux].cont_log].hr_max = hr;
+      }
+    }
+
+    if (!strcmp(pt,"speed")){
+      pt = strtok(NULL," ");
+      vel = atof(pt);
+      vel = vel*3.6;
+      if (bikes[aux].informacoes[bikes[aux].cont_log].vel_max < vel){
+          bikes[aux].informacoes[bikes[aux].cont_log].vel_max = vel;
+      }
+    }
+
+    if (!strcmp(pt,"altitude")){
+      pt = strtok(NULL," ");
+      if (flag == 1){
+        alt_novo = atof(pt);
+        alt_velho = alt_novo;
+        flag = 0;
+      }
+      else{
+        alt_novo = atof(pt);
+      }  
+      if (alt_novo > alt_velho && alt_velho > 0){
+        bikes[aux].informacoes[bikes[aux].cont_log].sub_acumulada += alt_novo - alt_velho;
+      }
+      alt_velho = alt_novo;
+    }
+    
+    fgets (line, LINESIZE, arq);   // tenta ler a próxima linha
+    i++ ;
+  }
+
   bikes[aux].cont_log++;
 
 }
@@ -132,25 +218,12 @@ void ler_arquivos (struct dirent **arquivos, Bicicleta_t *bikes, contadores_t *c
       aux = checar_nome_bike(bikes, cont, pt);
       if ( aux > cont->cont_bike){
         adicionar_bike(bikes,cont,pt,aux-1);
-        adicionar_log(bikes,aux-1,arquivos[i]->d_name);  
+        adicionar_log(bikes,aux-1,arquivos[i]->d_name, arq);  
       }
       else {
-        adicionar_log(bikes,aux,arquivos[i]->d_name);
+        adicionar_log(bikes,aux,arquivos[i]->d_name, arq);
       }
       
-      /*
-      fgets (line, LINESIZE, arq);
-      strtok(line, ":");
-      strcpy(bikes->informacoes->data,strtok(NULL,","));//arrumar a data
-
-      //altitude
-      fgets (line, LINESIZE, arq);
-      pt = strtok(line, ":");
-      if(!strcmp(pt,"altitude")){
-        pt = strtok(NULL,":")
-        sscanf(, "%lf", &bike->subida_acumulada);
-        strcpy(,strtok(NULL,"m"));
-      }*/
 
     
     // fecha o arquivo
@@ -180,45 +253,3 @@ int filtro (const struct dirent *dir){
   return 0;
 }
 
-/*char ler_diretorio(char *diretorio, Bicicleta_t *bikes){
-  // pega o diretorio inicial em que o programa esta rodando
-  getcwd(home_directory, sizeof(home_directory));
-  // muda o diretorio de executacao do programa e checa retorno
-  ret = chdir(tiles_directory);
-  if ( ret != 0 ){
-    fprintf(stderr, "Not able to change directory %s\n", tiles_directory);
-    exit(EXIT_FAILURE);
-  }
-  DIR *dirstream;
-  struct dirent *direntry;
-  char *arquivo = malloc (sizeof(char)*LINESIZE);
- 
-  // abre um diretório
-  dirstream = opendir (diretorio);
-  if ( ! dirstream ){
-    perror ("Erro de abrir diretorio");
-    exit (1);
-  }
- 
-  // varre as entradas do diretório aberto
-  for (;;){
-    // pega a próxima entrada
-    direntry = readdir (dirstream);
- 
-    // se for nula, encerra a varredura
-    if (! direntry)
-      break ;
- 
-    // mostra conteúdo da entrada
-    if (direntry->d_type == DT_REG){
-        strcat(strcpy(arquivo, diretorio), "/");
-        strcat(arquivo, direntry->d_name);
-        //ler_arquivo(arquivo, bikes);
-    }
-  }
- 
-   // fecha o diretório
-   (void) closedir (dirstream);
-   return arquivo;
-}
-*/

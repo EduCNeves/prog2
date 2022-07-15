@@ -13,7 +13,12 @@
 typedef struct log_t {
 
     char nome_log[100];
-    char data[50];
+    char data[100];
+    int tempo;
+    double distance;
+    int hr_max;
+    double vel_max;
+    double sub_acumulada;
     /*
     int altitude;
     int cadence;
