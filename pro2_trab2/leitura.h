@@ -48,17 +48,25 @@ typedef struct elev_dado_t{
 }elev_dado_t;
 
 
-void lista_acumulada (Bicicleta_t *bikes, contadores_t *cont);
-int histograma(Bicicleta_t *bikes, contadores_t *cont,int id_bike);
-void lista_atividades(Bicicleta_t *bikes, contadores_t *cont, int id_bike);
-void ordenar_por_distancia(Bicicleta_t *bikes, contadores_t *cont);
+
 void troca(Bicicleta_t *bikes, int i, int min, int l);
-void lista_distancia(Bicicleta_t *bikes, contadores_t *cont);
-void mostrar_bike(Bicicleta_t *bikes, contadores_t *cont);
+void ordenar_por_distancia(Bicicleta_t *bikes, contadores_t *cont);
+void ordenar_por_elev(elev_dado_t *elev ,contadores_t *cont);
+
 int imiprir_menu(int fim, Bicicleta_t *bikes, contadores_t *cont);
-void ler_arquivos (struct dirent **arquivos, Bicicleta_t *bikes, contadores_t *cont);
-int filtro (const struct dirent *dir);
+
+void mostrar_bike(Bicicleta_t *bikes, contadores_t *cont);
+int lista_atividades(Bicicleta_t *bikes, contadores_t *cont, int id_bike);
+int lista_data(Bicicleta_t *bikes, contadores_t *cont);
+int lista_distancia(Bicicleta_t *bikes, contadores_t *cont);
+int lista_acumulada (Bicicleta_t *bikes, contadores_t *cont);
+int histograma(Bicicleta_t *bikes, contadores_t *cont,int id_bike);
+
 int checar_nome_bike(Bicicleta_t *bikes, contadores_t *cont, char *nome);
 void adicionar_bike(Bicicleta_t *bikes, contadores_t *cont, char *nome, int aux);
+void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq);
+
+void ler_arquivos (struct dirent **arquivos, Bicicleta_t *bikes, contadores_t *cont);
+int filtro (const struct dirent *dir);
      
 #endif

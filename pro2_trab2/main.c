@@ -56,32 +56,16 @@ int main(int argc, char **argv){
   }
 
   //leitura de arquivos
-  printf("Lendo os aquirvos ...\n");
+  printf("Lendo os arquivos ...\n");
   ler_arquivos(nome_log, bikes, &cont);
   system("clear");
 
-  /*
-  for (int i = 0; i < 1; i++){
-    printf("%s\n", bikes[i].nome_bike);
-    //printf(" quantidades de logs:%d\n", bikes[0].cont_log);
-    for (int l = 0; l < bikes[i].cont_log; l++){
-      printf("%s  ", bikes[i].informacoes[l].nome_log);
-      printf ("data: %s\n", bikes[i].informacoes[l].data); 
-      //printf("dist:  %-5.2lf\n",bikes[0].informacoes[l].distance);
-      //printf ("HR_MAX: %d   ", bikes[0].informacoes[l].hr_max);
-      //printf ("VEL_MAX: %-5.2lf   ", bikes[0].informacoes[l].vel_max);
-      //printf ("ELE: %-5.2lf\n", bikes[0].informacoes[l].sub_acumulada);
-      //printf ("tempo: %d\n", bikes[0].informacoes[l].tempo);
-    }
-  
-  }*/
-
   int fim = 1;
-  
   while (fim != 0){
     //system("clear");
     fim = imiprir_menu(fim, bikes, &cont);
   }
+  printf("Obrigado por ter usado o programa\n");
   
   free(diretorio);
   for (int i=0; i<cont.quantidade_log; i++){

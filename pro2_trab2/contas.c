@@ -1,126 +1,310 @@
-#include "leitura.h"
-#include "contas.h"
+void processando_timestamp(char *pt, log_t  aux_dados){
 
+    char *ano, *mes, *dia, *tempo, *h, *m, *s;
+    int segundos,horas, minutos;
 
-//ordenação por distancia
-void ordenar_por_distancia(Bicicleta_t *bikes, contadores_t *cont){
-    int min, i, l, j;
-    for ( i = 0; i < cont->cont_bike; i++){
-        for ( l = 0; l < bikes[i].cont_log; l++){
-            min = l; 
-            for (j = l+1; j < bikes[i].cont_log; j++){
-                if (bikes[i].informacoes[j].distance < bikes[i].informacoes[min].distance ){
-                    min = j;
-                }
-            }
-            troca(bikes,i,min,l);
-        }
-    } 
+    pt = strtok(NULL," ");
+      tempo = strtok(NULL," ");
+      
+      //pegando a data
+      ano = strtok(pt,"-");
+      mes = strtok(NULL,"-");
+      dia = strtok(NULL,"-");
+      strcpy(aux_dados.data,ano);
+      strcat(aux_dados.data,"/");
+      strcat(aux_dados.data,mes);
+      strcat(aux_dados.data,"/");
+      strcat(aux_dados.data,dia);
+      
+      //pegando o tempo
+      h = strtok(tempo,":");
+      horas = atoi(h);
+      horas = horas*3600;
+      m = strtok(NULL,":");
+      minutos = atoi(m);
+      minutos = minutos*60;
+      s = strtok(NULL,":");
+      segundos = atoi(s); 
+      aux_dados.tempo = horas+minutos+segundos;
 }
 
-void troca(Bicicleta_t *bikes, int i, int min, int l){
+int lendo_distance(char *pt){
 
-    log_t aux;
+    int distance;
+    pt = strtok(NULL," ");
+    distance = atof(pt);
+    return (distance/1000);
 
-    aux = bikes[i].informacoes[min];
-    bikes[i].informacoes[min] = bikes[i].informacoes[l];
-    bikes[i].informacoes[l] = aux;
+}
 
+int lendo_heart_rate(char *pt){
+    
+    int hr
+    
+    pt = strtok(NULL," ");
+    hr = atof(pt);
+    return hr;
 
+    if (aux_dados.hr_max < hr){
+        aux_dados.hr_max = hr;
+    }
+}
+
+int lendo_speed(char *pt){
+    double vel;
+    pt = strtok(NULL," ");
+    vel = atof(pt);
+    return vel*3.6;
+      /*
+      if (flag == 1){
+        vel_velho = vel;
+        flag = 0;
+      }
+      else {
+        vel = atof(pt);
+      }
+
+      vel = vel*3.6;
+      if (bikes[aux].informacoes[bikes[aux].cont_log].vel_max < vel){
+          bikes[aux].informacoes[bikes[aux].cont_log].vel_max = vel;
+      }
+
+      vel_velho = vel;*/
+}
+
+int lendo_altitude(char *pt){
+
+    double alt;
+    pt = strtok(NULL," ");
+    alt = atof(pt);
+    return alt_novo;  
     /*
-    aux_data = bikes[i].informacoes[mim].data
-    aux_dis = bikes[i].informacoes[mim].distance;
-    aux_nome_log = bikes[i].informacoes[mim].nome_log
-    aux_hr_max = bikes[i].informacoes[mim].hr_max;
-    aux_vel_max = bikes[i].informacoes[mim].vel_max;
-    aux_sub_acumulada = bikes[i].informacoes[mim].sub_acumulada;
-    aux_tempo = bikes[i].informacoes[mim].tempo
+      if (flag == 1){
+        alt_velho = alt_novo;
+        flag = 0;
+      }
+      else{
+        alt_novo = atof(pt);
+      }  
+      if (alt_novo > alt_velho && alt_velho > 0){
+        bikes[aux].informacoes[bikes[aux].cont_log].sub_acumulada += alt_novo - alt_velho;
+      }
+      alt_velho = alt_novo;
+    }*/
 
-    //bikes[i].informacoes[min].distance  =  bikes[i].informacoes[j].distance;
-    
-    bikes[i].informacoes[mim].data =  bikes[i].informacoes[l].data;
-    bikes[i].informacoes[mim].distance = bikes[i].informacoes[l].distance;
-    bikes[i].informacoes[mim].nome_log = bikes[i].informacoes[l].nome_log;
-    bikes[i].informacoes[mim].hr_max = bikes[i].informacoes[l].hr_max;
-    bikes[i].informacoes[mim].vel_max = bikes[i].informacoes[l].vel_max;
-    bikes[i].informacoes[mim].sub_acumulada = bikes[i].informacoes[l].sub_acumulada;
-    bikes[i].informacoes[mim].tempo = bikes[i].informacoes[l].tempo;
-
-    //bikes[i].informacoes[j].distance = aux_dis;
-
-    bikes[i].informacoes[l].data =  aux_data;
-    bikes[i].informacoes[l].distance = aux_dis;
-    bikes[i].informacoes[l].nome_log = aux_nome_log;
-    bikes[i].informacoes[l].hr_max = aux_hr_max;
-    bikes[i].informacoes[l].vel_max = aux_vel_max;
-    bikes[i].informacoes[l].sub_acumulada = aux_sub_aculada;
-    bikes[i].informacoes[l].tempo = aux_tempo;*/
-    
 }
 
-void ordenar_por_data(Bicicleta_t *bikes, contadores_t *cont){
-    int min, i, l, j;
-    int aux;
-    //char *aux1, *aux2, *ano, *mes, *dia;
+int lendo_cadence(char *pt){
 
-    for ( i = 0; i < cont->cont_bike; i++){
-        for ( l = 0; l < bikes[i].cont_log; l++){
-            min = l; 
-            for (j = l+1; j < bikes[i].cont_log; j++){
+    int cad;
+    pt = strtok(NULL," ");
+    cad = atof(pt);
+    return cad;
+      /*
+      if (flag == 1){
+        cad_velha = cad;
+        flag = 0;
+      }
+      else {
+        cad = atof(pt);
+      }
 
-                //pegando a data
-                /*aux1 = bikes[i].informacoes[j].data;
-                ano = strtok(aux1,"/");
-                mes = strtok(NULL,"/");
-                dia = strtok(NULL,"/");*/
-                aux = strcmp(bikes[i].informacoes[j].data,bikes[i].informacoes[min].data);
-                if ( aux == -1  ){
-                    min = j;
-                }
-            }
-            troca(bikes,i,min,l);
+      cad_velha = cad;*/
+}
+
+le_bloco_de_log(){
+
+    while (line != "\n"){
+
+        if (!strcmp(pt,"timestamp")){
+            processando_timestamp(char *pt, log_t  aux_dados)
         }
-    } 
+        
+        if (!strcmp(pt,"distance")){
+         aux_dados.distance = processando_distance(char *pt);
+        }
+
+        if (!strcmp(pt,"heart_rate")){
+            aux_dados.hr_max = processando_heart_rate(char *pt);
+        }
+
+        if (!strcmp(pt,"speed")){
+            aux_dados.vel_max = processando_speed(char *pt);
+        }
+
+        if (!strcmp(pt,"altitude")){
+            aux_dados.sub_acumulada = processando_altitude(char *pt);
+        }
+
+        if (!strcmp(pt,"cadence")){
+            aux_dados.cadence = processando_cadence(char *pt);
+        }
+
+        fgets (line, LINESIZE, arq);   // tenta ler a próxima linha
+    }
+
+}
+
+void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq){
+
+    strcpy(bikes[aux].informacoes[bikes[aux].cont_log].nome_log,arquivo);
+    char *line = malloc (sizeof(char)*LINESIZE);
+
+    log_t  aux_dados;
+    fgets (line, LINESIZE, arq) ;
+    le_bloco_de_log(line, aux_dados);
+    while (! feof (arq)){
+
+        fgets (line, LINESIZE, arq);   // tenta ler a próxima linha
+        
+    }
+
 }
 
 
+void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq){
+
+  strcpy(bikes[aux].informacoes[bikes[aux].cont_log].nome_log,arquivo);
+
+  char *line = malloc (sizeof(char)*LINESIZE);
+  int i,cad_velha,cad_medio,cad,hr_velho,hr_medio;
+  char *pt, *ano, *mes, *dia, *tempo, *h, *m, *s;
+  int segundos,horas, minutos, hr,segundo_velho, segundos_atual, dif_segundo, cont_segundos;
+  double distance,vel,alt_novo,alt_velho, vel_medio, vel_velho;
+
+  log_t  aux_dados;
+
+  fgets (line, LINESIZE, arq) ;
+  while (! feof (arq)){
+    
+    pt = strtok(line, ": ");
+
+    if (!strcmp(pt,"timestamp")){
+      
+      processando_timestamp(char *pt, log_t  aux_dados)
 
 
-void ordenar_por_data(Bicicleta_t *bikes, contadores_t *cont){
-    int min, i, l, j;
-    char *aux1, *aux2, *ano1, *mes1, *dia1, *ano2, *mes2, *dia2;
+      //media de velhocidade
+      segundo_velho = bikes[aux].informacoes[bikes[aux].cont_log].tempo;
+      segundos_atual = segundos;
+      
+      if (segundo_velho == 0){
+        dif_segundo = 1;
+      }
+      else{
+        dif_segundo = segundos_atual - segundo_velho;
+      }
 
-    for ( i = 0; i < cont->cont_bike; i++){
-        for ( l = 0; l < bikes[i].cont_log; l++){
-            min = l; 
-            for (j = l+1; j < bikes[i].cont_log; j++){
-                //pegando a data1
-                aux1 = bikes[i].informacoes[j].data;
-                ano1 = strtok(aux1,"/");
-                mes1= strtok(NULL,"/");
-                dia1 = strtok(NULL,"/");
+      bikes[aux].informacoes[bikes[aux].cont_log].tempo = segundos;
 
-                //pegando a segunda data
-                aux2 = bikes[i].informacoes[min].data;
-                ano2 = strtok(aux2,"/");
-                mes2= strtok(NULL,"/");
-                dia2 = strtok(NULL,"/");
+      //velocidade media
+      if (vel_velho != 0 ){
+        vel_medio += vel_velho * dif_segundo;
+        cont_segundos +=  dif_segundo;
+      }
 
-                if (strcmp(ano1,ano2) == 0){
-                  if (strcmp(mes1,mes2) == 0 ){
-                    if (strcmp(dia1,dia2) == -1) {
-                      min = j;
-                    }
-                  }
-                  else if (strcmp(mes1,mes2) == -1){
-                    min = j;
-                  }
-                }
-                else if (strcmp(ano1,ano2) == -1){
-                  min = j;
-                }
-            }
-            troca(bikes,i,min,l);
-        }
-    } 
+      //cadencia medio
+      if (cad_velha != 0 ){
+        cad_medio += cad_velha * dif_segundo;
+        cont_segundos +=  dif_segundo;
+      }
+
+      //hr medio
+      if (hr_velho != 0 ){
+        hr_medio += hr_velho * dif_segundo;
+        cont_segundos +=  dif_segundo;
+      }
+
+
+
+    }
+
+    if (!strcmp(pt,"distance")){
+      aux_dados.distance = processando_disntandcia(char *pt);
+    }
+
+    if (!strcmp(pt,"heart_rate")){
+      pt = strtok(NULL," ");
+
+      if (flag == 1){
+        hr = atof(pt);
+        hr_velho = hr;
+        flag = 0;
+      }
+      else {
+        hr = atoi(pt);
+      }
+
+      if (bikes[aux].informacoes[bikes[aux].cont_log].hr_max < hr){
+          bikes[aux].informacoes[bikes[aux].cont_log].hr_max = hr;
+      }
+    }
+
+    if (!strcmp(pt,"speed")){
+      pt = strtok(NULL," ");
+      
+      if (flag == 1){
+        vel = atof(pt);
+        vel_velho = vel;
+        flag = 0;
+      }
+      else {
+        vel = atof(pt);
+      }
+
+      vel = vel*3.6;
+      if (bikes[aux].informacoes[bikes[aux].cont_log].vel_max < vel){
+          bikes[aux].informacoes[bikes[aux].cont_log].vel_max = vel;
+      }
+
+      vel_velho = vel;
+
+    }
+
+    if (!strcmp(pt,"altitude")){
+      pt = strtok(NULL," ");
+      if (flag == 1){
+        alt_novo = atof(pt);
+        alt_velho = alt_novo;
+        flag = 0;
+      }
+      else{
+        alt_novo = atof(pt);
+      }  
+      if (alt_novo > alt_velho && alt_velho > 0){
+        bikes[aux].informacoes[bikes[aux].cont_log].sub_acumulada += alt_novo - alt_velho;
+      }
+      alt_velho = alt_novo;
+    }
+    
+    if (!strcmp(pt,"cadence")){
+      pt = strtok(NULL," ");
+      
+      if (flag == 1){
+        cad = atof(pt);
+        cad_velha = cad;
+        flag = 0;
+      }
+      else {
+        cad = atof(pt);
+      }
+
+      cad_velha = cad;
+
+    }
+
+    fgets (line, LINESIZE, arq);   // tenta ler a próxima linha
+    i++ ;
+    //flag = 0;
+  }
+
+  bikes[aux].informacoes[bikes[aux].cont_log].vel_med = vel_medio/cont_segundos;
+  bikes[aux].informacoes[bikes[aux].cont_log].hr_max = hr_medio/cont_segundos;
+  bikes[aux].informacoes[bikes[aux].cont_log].cad = cad_medio/cont_segundos;
+
+
+  bikes[aux].cont_log++;
+
+  free(line);
+
 }

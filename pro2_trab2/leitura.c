@@ -75,73 +75,94 @@ void troca(Bicicleta_t *bikes, int i, int min, int l){
     
 }
 
-void lista_data(Bicicleta_t *bikes, contadores_t *cont){
+int lista_data(Bicicleta_t *bikes, contadores_t *cont){
 
   ordenar_por_data(bikes,cont);
 
-  for (int i = 0; i < 1; i++){
+  for (int i = 0; i < cont->cont_bike; i++){
     printf("%s\n", bikes[i].nome_bike);
-    //printf(" quantidades de logs:%d\n", bikes[0].cont_log);
     for (int l = 0; l < bikes[i].cont_log; l++){
-      printf("%s  ", bikes[i].informacoes[l].nome_log);
-      printf ("data: %s\n", bikes[i].informacoes[l].data); 
-      //printf("dist:  %-5.2lf\n",bikes[0].informacoes[l].distance);
-      //printf ("HR_MAX: %d   ", bikes[0].informacoes[l].hr_max);
-      //printf ("VEL_MAX: %-5.2lf   ", bikes[0].informacoes[l].vel_max);
-      //printf ("ELE: %-5.2lf\n", bikes[0].informacoes[l].sub_acumulada);
-      //printf ("tempo: %d\n", bikes[0].informacoes[l].tempo);
+      printf("%s ", bikes[i].informacoes[l].nome_log);
+      printf ("%s ", bikes[i].informacoes[l].data); 
+      printf ("cad(rpm):%d ", bikes[i].informacoes[l].cad);
+      printf("hr_med(bpm):%d ",bikes[i].informacoes[l].hr_med);
+      printf ("hr_max(bpm):%d ", bikes[i].informacoes[l].hr_max);
+      printf("vel_med(km/h):%-5.2lf ", bikes[i].informacoes[l].vel_med);
+      printf("vel_max(km/h):%-5.2lf ", bikes[i].informacoes[l].vel_max);
+      printf("dist(km):%-5.2lf ",bikes[i].informacoes[l].distance);
+      printf ("elev(m):%-5.2lf\n", bikes[i].informacoes[l].sub_acumulada);
     }
-  } 
+    printf("\n");
+  }
+
+  int op;
+  printf("\n");
+  printf("Digite 1 para voltar no menu ou digite 0 para sair do programa\n");
+  scanf("%d", &op);
+  return op; 
 
 }
 
-void lista_distancia(Bicicleta_t *bikes, contadores_t *cont){
+int lista_distancia(Bicicleta_t *bikes, contadores_t *cont){
 
   ordenar_por_distancia(bikes,cont);
 
-  for (int i = 0; i < 1; i++){
+  for (int i = 0; i < cont->cont_bike; i++){
     printf("%s\n", bikes[i].nome_bike);
-    //printf(" quantidades de logs:%d\n", bikes[0].cont_log);
     for (int l = 0; l < bikes[i].cont_log; l++){
-      printf("%s  ", bikes[i].informacoes[l].nome_log);
-      //printf ("data:%s   ", bikes[i].informacoes[l].data); 
-      printf("dist:  %-5.2lf\n",bikes[0].informacoes[l].distance);
-      //printf ("HR_MAX: %d   ", bikes[0].informacoes[l].hr_max);
-      //printf ("VEL_MAX: %-5.2lf   ", bikes[0].informacoes[l].vel_max);
-      //printf ("ELE: %-5.2lf\n", bikes[0].informacoes[l].sub_acumulada);
-      //printf ("tempo: %d\n", bikes[0].informacoes[l].tempo);
+      printf("%s ", bikes[i].informacoes[l].nome_log);
+      printf ("%s ", bikes[i].informacoes[l].data); 
+      printf ("cad(rpm):%d ", bikes[i].informacoes[l].cad);
+      printf("hr_med(bpm):%d ",bikes[i].informacoes[l].hr_med);
+      printf ("hr_max(bpm):%d ", bikes[i].informacoes[l].hr_max);
+      printf("vel_med(km/h):%-5.2lf ", bikes[i].informacoes[l].vel_med);
+      printf("vel_max(km/h):%-5.2lf ", bikes[i].informacoes[l].vel_max);
+      printf("dist(km):%-5.2lf ",bikes[i].informacoes[l].distance);
+      printf ("elev(m):%-5.2lf\n", bikes[i].informacoes[l].sub_acumulada);
     }
-  } 
+    printf("\n");
+  }
+
+  int op;
+  printf("\n");
+  printf("Digite 1 para voltar no menu ou digite 0 para sair do programa\n");
+  scanf("%d", &op);
+  return op;
 
 }
 
 void mostrar_bike(Bicicleta_t *bikes, contadores_t *cont){
 
-  printf("nomes das bicibletas:\n");
   for (int i = 0; i < cont->cont_bike; i++){
     printf("%d. %s\n",i, bikes[i].nome_bike);
   }
   printf("\n");
 
-
 }
 
-void lista_atividades(Bicicleta_t *bikes, contadores_t *cont, int id_bike){
+int lista_atividades(Bicicleta_t *bikes, contadores_t *cont, int id_bike){
 
     printf("Bicicleta: %s\n", bikes[id_bike].nome_bike);
-    printf("Data\t\tDistância(km) \tVelocidade_Média(km/h) \tVelocidade_Máxima(km/h) \tHR_Médio(bpm) \tHR_Máximo(bpm) \tCadência_Média(rpm) \tSubida_Acumulada(m)\n");
+    //rintf("Data\t\tDistância(km) \tVelocidade_Média(km/h) \tVelocidade_Máxima(km/h) \tHR_Médio(bpm) \tHR_Máximo(bpm) \tCadência_Média(rpm) \tSubida_Acumulada(m)\n");
     
     for (int l = 0; l < bikes[id_bike].cont_log; l++){
-      //printf("%s  ", bikes[id_bike].informacoes[l].nome_log);
-      printf ("%s\t", bikes[id_bike].informacoes[l].data); 
-      printf("%-5.2lf\t",bikes[0].informacoes[l].distance);
-      printf("%-5.2lf\t", bikes[id_bike].informacoes[l].vel_med);
-      printf("%-5.2lf\t", bikes[0].informacoes[l].vel_max);
-      printf("%d\t",bikes[0].informacoes[l].hr_med);
-      printf ("%d\t", bikes[0].informacoes[l].hr_max);
-      printf ("%d\t", bikes[0].informacoes[l].cad);
-      printf ("%-5.2lf\n", bikes[id_bike].informacoes[l].sub_acumulada);
+      printf("%s ", bikes[id_bike].informacoes[l].nome_log);
+      printf ("%s ", bikes[id_bike].informacoes[l].data); 
+      printf ("cad(rpm):%d ", bikes[id_bike].informacoes[l].cad);
+      printf("hr_med(bpm):%d ",bikes[id_bike].informacoes[l].hr_med);
+      printf ("hr_max(bpm):%d ", bikes[id_bike].informacoes[l].hr_max);
+      printf("vel_med(km/h):%-5.2lf ", bikes[id_bike].informacoes[l].vel_med);
+      printf("vel_max(km/h):%-5.2lf ", bikes[id_bike].informacoes[l].vel_max);
+      printf("dist(km):%-5.2lf ",bikes[id_bike].informacoes[l].distance);
+      printf ("elev(m):%-5.2lf\n", bikes[id_bike].informacoes[l].sub_acumulada);
     }
+
+  int op;
+  printf("\n");
+  printf("Digite 1 para voltar no menu ou digite 0 para sair do programa\n");
+  scanf("%d", &op);
+  return op;
+
   
 }
 
@@ -195,7 +216,7 @@ int histograma(Bicicleta_t *bikes, contadores_t *cont,int id_bike){
 
   int op;
   printf("\n");
-  printf("Digite 0 para voltar no menu:\n");
+  printf("Digite 1 para voltar no menu ou digite 0 para sair do programa\n");
   scanf("%d", &op);
   return op;
 
@@ -219,7 +240,7 @@ void ordenar_por_elev(elev_dado_t *elev ,contadores_t *cont){
   }
 }
 
-void lista_acumulada (Bicicleta_t *bikes, contadores_t *cont){
+int lista_acumulada (Bicicleta_t *bikes, contadores_t *cont){
 
   elev_dado_t *elev = malloc (sizeof(elev_dado_t)*cont->quantidade_log);
   int cont_e = 0;
@@ -235,13 +256,26 @@ void lista_acumulada (Bicicleta_t *bikes, contadores_t *cont){
   ordenar_por_elev(elev, cont);
 
   for (int i = 0; i < cont_e; i++){
-    printf("%s  ", bikes[elev[i].id_bike].nome_bike);
-    printf("%s  ", bikes[elev[i].id_bike].informacoes[elev[i].id_log].nome_log);
-    printf ("ELE: %-5.2lf\n", bikes[elev[i].id_bike].informacoes[elev[i].id_log].sub_acumulada);
-    
+    printf("%s ", bikes[elev[i].id_bike].nome_bike);
+    printf("%s ", bikes[elev[i].id_bike].informacoes[elev[i].id_log].nome_log);
+    printf ("%s ", bikes[elev[i].id_bike].informacoes[elev[i].id_log].data); 
+    printf ("cad(rpm):%d ", bikes[elev[i].id_bike].informacoes[elev[i].id_log].cad);
+    printf("hr_med(bpm):%d ",bikes[elev[i].id_bike].informacoes[elev[i].id_log].hr_med);
+    printf ("hr_max(bpm):%d ", bikes[elev[i].id_bike].informacoes[elev[i].id_log].hr_max);
+    printf("vel_med(km/h):%-5.2lf ", bikes[elev[i].id_bike].informacoes[elev[i].id_log].vel_med);
+    printf("vel_max(km/h):%-5.2lf ", bikes[elev[i].id_bike].informacoes[elev[i].id_log].vel_max);
+    printf("dist(km):%-5.2lf ",bikes[elev[i].id_bike].informacoes[elev[i].id_log].distance);
+    printf ("elev(m):%-5.2lf\n", bikes[elev[i].id_bike].informacoes[elev[i].id_log].sub_acumulada); 
   }
-  
+
   free(elev);
+  
+  int op;
+  printf("\n");
+  printf("Digite 1 para voltar no menu ou digite 0 para sair do programa\n");
+  scanf("%d", &op);
+  return op;
+  
 }
 
 
@@ -261,28 +295,36 @@ int imiprir_menu(int fim, Bicicleta_t *bikes, contadores_t *cont){
 
     switch ( op ){
         case 1:
-            //system("clear");
+            system("clear");
+            printf("Listas de bicicletas:\n");
             mostrar_bike(bikes, cont);
-            fim = 1;
+            printf("Digite 1 para voltar no menu ou digite 0 para sair do programa\n");
+            scanf("%d", &fim);
+            system("clear");
             break;
         case 2:
+            system("clear");
             mostrar_bike(bikes, cont);
             printf("Qual bicicleta você quer ver a atividade, digite o numero dela:\n");
             scanf("%d",&i);
-            lista_atividades(bikes, cont, i);
-            fim = 1;
+            system("clear");
+            fim = lista_atividades(bikes, cont, i);
+            system("clear");
             break;
         case 3:
-            lista_data(bikes, cont);
-            fim = 1;
+            system("clear");
+            fim = lista_data(bikes, cont);
+            system("clear");
             break;
         case 4:
-            lista_distancia(bikes, cont);
-            fim = 1;
+            system("clear");
+            fim = lista_distancia(bikes, cont);
+            system("clear");
             break;
         case 5:
-            lista_acumulada(bikes,cont);
-            fim = 1;
+            system("clear");
+            fim = lista_acumulada(bikes,cont);
+            system("clear");
             break;
         case 6:
             system("clear");
@@ -290,13 +332,11 @@ int imiprir_menu(int fim, Bicicleta_t *bikes, contadores_t *cont){
             printf("Qual bicicleta você quer ver o histograma, digite o numero dela:\n");
             scanf("%d",&i);
             system("clear");
-            histograma(bikes,cont,i);
+            fim = histograma(bikes,cont,i);
             system("clear");
-            fim = 1;
             break;
         case 0:
             system("clear");
-            printf("Obrigado por ter usado o programa\n");
             fim = 0;
             break;
       }
@@ -311,12 +351,12 @@ void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq){
   strcpy(bikes[aux].informacoes[bikes[aux].cont_log].nome_log,arquivo);
 
   char *line = malloc (sizeof(char)*LINESIZE);
-  int i,cad_velha,cad_medio,cad,hr_velho,hr_medio;
+  int cad_velha,cad_medio,cad,hr_velho,hr_medio;
   char *pt, *ano, *mes, *dia, *tempo, *h, *m, *s;
   int segundos,horas, minutos, hr,segundo_velho, segundos_atual, dif_segundo, cont_segundos;
   double distance,vel,alt_novo,alt_velho, vel_medio, vel_velho;
 
-  fgets (line, LINESIZE, arq) ;
+  fgets (line, LINESIZE, arq);
   while (! feof (arq)){
     
     pt = strtok(line, ": ");
@@ -382,6 +422,7 @@ void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq){
 
 
     }
+
     if (!strcmp(pt,"distance")){
       pt = strtok(NULL," ");
       distance = atof(pt);
@@ -459,7 +500,7 @@ void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq){
     }
 
     fgets (line, LINESIZE, arq);   // tenta ler a próxima linha
-    i++ ;
+    //i++ ;
     //flag = 0;
   }
 
@@ -507,6 +548,7 @@ void ler_arquivos (struct dirent **arquivos, Bicicleta_t *bikes, contadores_t *c
  
   // abre o arquivo em leitura
   for(i=0; i < cont->quantidade_log; i++ ){
+    
     arq = fopen (arquivos[i]->d_name, "r") ;
     if ( !arq ){
       perror ("Erro ao abrir arquivo") ;
@@ -515,20 +557,18 @@ void ler_arquivos (struct dirent **arquivos, Bicicleta_t *bikes, contadores_t *c
 
     char pt[cont->quantidade_log];
 
-      fgets (line, LINESIZE, arq);
-      strtok(line, ":");
-      strcpy(pt,strtok(NULL,"\n"));
-      aux = checar_nome_bike(bikes, cont, pt);
-      if ( aux > cont->cont_bike){
-        adicionar_bike(bikes,cont,pt,aux-1);
-        adicionar_log(bikes,aux-1,arquivos[i]->d_name, arq);  
-      }
-      else {
-        adicionar_log(bikes,aux,arquivos[i]->d_name, arq);
-      }
+    fgets (line, LINESIZE, arq);
+    strtok(line, ":");
+    strcpy(pt,strtok(NULL,"\n"));
+    aux = checar_nome_bike(bikes, cont, pt);
+    if ( aux > cont->cont_bike){
+      adicionar_bike(bikes,cont,pt,aux-1);
+      adicionar_log(bikes,aux-1,arquivos[i]->d_name, arq);  
+    }
+    else {
+      adicionar_log(bikes,aux,arquivos[i]->d_name, arq);
+    }
       
-
-    
     // fecha o arquivo
     fclose (arq) ;
 
