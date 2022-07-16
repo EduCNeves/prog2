@@ -2,7 +2,7 @@ CFLAGS = -Wall -g
 
 all: main
 
-main: main.o leitura.o
+main: main.o leitura.o 
 	gcc -std=c99 main.o leitura.o -o gps
 
 leitura.o: leitura.c leitura.h

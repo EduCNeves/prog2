@@ -34,6 +34,7 @@ int main(int argc, char **argv){
     return 1;
   }
 
+
   //alocando vetor de bikes
   Bicicleta_t *bikes = malloc(sizeof(Bicicleta_t)*cont.quantidade_log);
 
@@ -47,28 +48,47 @@ int main(int argc, char **argv){
       bikes[i].informacoes[l].distance = 0;
       bikes[i].informacoes[l].hr_max = 0;
       bikes[i].informacoes[l].vel_max = 0;
+      bikes[i].informacoes[l].vel_med = 0;
+      bikes[i].informacoes[l].cad = 0;
+      bikes[i].informacoes[l].hr_med = 0;
+      bikes[i].informacoes[l].sub_acumulada = 0;
     }
   }
 
   //leitura de arquivos
+  printf("Lendo os aquirvos ...\n");
   ler_arquivos(nome_log, bikes, &cont);
-  //for (int i = 0; i < cont.cont_bike; i++){
-    printf("%s\n", bikes[0].nome_bike);
-    printf(" quantidades de logs:%d\n", bikes[0].cont_log);
-    for (int l = 0; l < bikes[0].cont_log; l++){
-      printf("%s  ", bikes[0].informacoes[l].nome_log);
-      printf ("data:%s   ", bikes[0].informacoes[l].data); 
-      printf("dist:  %-5.2lf   ",bikes[0].informacoes[l].distance);
-      printf ("HR_MAX: %d   ", bikes[0].informacoes[l].hr_max);
-      printf ("VEL_MAX: %-5.2lf   ", bikes[0].informacoes[l].vel_max);
-      printf ("ELE: %-5.2lf\n", bikes[0].informacoes[l].sub_acumulada);
-      printf ("tempo: %d\n", bikes[0].informacoes[l].tempo);
+  system("clear");
+
+  /*
+  for (int i = 0; i < 1; i++){
+    printf("%s\n", bikes[i].nome_bike);
+    //printf(" quantidades de logs:%d\n", bikes[0].cont_log);
+    for (int l = 0; l < bikes[i].cont_log; l++){
+      printf("%s  ", bikes[i].informacoes[l].nome_log);
+      printf ("data: %s\n", bikes[i].informacoes[l].data); 
+      //printf("dist:  %-5.2lf\n",bikes[0].informacoes[l].distance);
+      //printf ("HR_MAX: %d   ", bikes[0].informacoes[l].hr_max);
+      //printf ("VEL_MAX: %-5.2lf   ", bikes[0].informacoes[l].vel_max);
+      //printf ("ELE: %-5.2lf\n", bikes[0].informacoes[l].sub_acumulada);
+      //printf ("tempo: %d\n", bikes[0].informacoes[l].tempo);
     }
-    
-  //}
-  printf("\n");
-  printf(" total de arquivos:%d\n", cont.quantidade_log);
-  printf(" total de bikes:%d\n", cont.cont_bike);
   
+  }*/
+
+  int fim = 1;
+  
+  while (fim != 0){
+    //system("clear");
+    fim = imiprir_menu(fim, bikes, &cont);
+  }
+  
+  free(diretorio);
+  for (int i=0; i<cont.quantidade_log; i++){
+    free(bikes[i].nome_bike);
+    free(bikes[i].informacoes);
+  }
+  free(bikes);
+
   return 0;
 }

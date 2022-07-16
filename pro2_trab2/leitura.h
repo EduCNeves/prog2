@@ -19,16 +19,9 @@ typedef struct log_t {
     int hr_max;
     double vel_max;
     double sub_acumulada;
-    /*
-    int altitude;
-    int cadence;
-    int distance;
-    int vel_med;
-    int vel_max;
+    double vel_med;
     int hr_med;
-    int hr_max;
-    int cad_med;
-    double subida_acumulada;*/
+    int cad;
 
 }log_t;
 
@@ -48,9 +41,21 @@ typedef struct contadores_t{
 
 }contadores_t;
 
+typedef struct elev_dado_t{
+    int id_bike;
+    int id_log;
+    double elev;
+}elev_dado_t;
 
 
-
+void lista_acumulada (Bicicleta_t *bikes, contadores_t *cont);
+int histograma(Bicicleta_t *bikes, contadores_t *cont,int id_bike);
+void lista_atividades(Bicicleta_t *bikes, contadores_t *cont, int id_bike);
+void ordenar_por_distancia(Bicicleta_t *bikes, contadores_t *cont);
+void troca(Bicicleta_t *bikes, int i, int min, int l);
+void lista_distancia(Bicicleta_t *bikes, contadores_t *cont);
+void mostrar_bike(Bicicleta_t *bikes, contadores_t *cont);
+int imiprir_menu(int fim, Bicicleta_t *bikes, contadores_t *cont);
 void ler_arquivos (struct dirent **arquivos, Bicicleta_t *bikes, contadores_t *cont);
 int filtro (const struct dirent *dir);
 int checar_nome_bike(Bicicleta_t *bikes, contadores_t *cont, char *nome);
