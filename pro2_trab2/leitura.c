@@ -199,7 +199,6 @@ int histograma(Bicicleta_t *bikes, contadores_t *cont,int id_bike){
   for (int i = 0; i <= n; i++){
     valor = ((piso+i)*10);
     printf("%d - %d \t|",valor,(valor+9));
-    // printf("|");
     for (int j = 0; j < vetor[i]; j++){
       printf("*");
     }
@@ -344,6 +343,7 @@ int imiprir_menu(int fim, Bicicleta_t *bikes, contadores_t *cont){
 
 }
 
+/*
 int flag = 1;
 
 void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq){
@@ -513,6 +513,267 @@ void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq){
 
   free(line);
 
+}*/
+
+void lendo_timestamp(char *pt, log_t  log_novo){
+
+    char *ano, *mes, *dia, *tempo, *h, *m, *s;
+    int segundos,horas, minutos;
+
+    pt = strtok(NULL," ");
+      tempo = strtok(NULL," ");
+      
+      //pegando a data
+      ano = strtok(pt,"-");
+      mes = strtok(NULL,"-");
+      dia = strtok(NULL,"-");
+      strcpy(log_novo.data,ano);
+      strcat(log_novo.data,"/");
+      strcat(log_novo.data,mes);
+      strcat(log_novo.data,"/");
+      strcat(log_novo.data,dia);
+      
+      //pegando o tempo
+      h = strtok(tempo,":");
+      horas = atoi(h);
+      horas = horas*3600;
+      m = strtok(NULL,":");
+      minutos = atoi(m);
+      minutos = minutos*60;
+      s = strtok(NULL,":");
+      segundos = atoi(s); 
+      log_novo.tempo = horas+minutos+segundos;
+}
+
+int lendo_distance(char *pt){
+
+    int distance;
+    pt = strtok(NULL," ");
+    distance = atof(pt);
+    return (distance/1000);
+
+}
+
+int lendo_heart_rate(char *pt){
+    
+    int hr;
+    
+    pt = strtok(NULL," ");
+    hr = atof(pt);
+    return hr;
+}
+
+int lendo_speed(char *pt){
+    double vel;
+    pt = strtok(NULL," ");
+    vel = atof(pt);
+    return vel*3.6;
+}
+
+double lendo_altitude(char *pt){
+
+    double alt;
+    pt = strtok(NULL," ");
+    alt = atof(pt);
+    return alt;  
+
+}
+
+int lendo_cadence(char *pt){
+
+    int cad;
+    pt = strtok(NULL," ");
+    cad = atof(pt);
+    return cad;
+
+}
+
+double processando_altitude(log_t  *log_novo, log_t *log_velho){
+
+  double alt;
+  if (log_novo->sub_acumulada > log_velho->sub_acumulada && log_velho->sub_acumulada > 0){
+    alt = log_novo->sub_acumulada - log_velho->sub_acumulada;
+  }
+
+  return alt;
+}
+
+double processando_speed(log_t  *log_novo, log_t *log_velho){
+   
+   if (log_velho->vel_max < log_novo->vel_max){
+    return log_novo->vel_max;
+   }
+   return log_velho->vel_max;
+}
+
+int processando_heart_rate(log_t  *log_novo, log_t *log_velho){
+  if (log_velho->hr_max < log_novo->hr_max){
+    return log_novo->hr_max;
+  }
+  return log_velho->hr_max;
+}
+
+int processando_cadence(log_t  *log_novo, log_t *log_velho, contadores_t *cont ){
+
+  int dif_segundo, cad;
+
+  dif_segundo =  log_novo->tempo - log_velho->tempo;
+  cad = log_velho->cad * dif_segundo;
+  if (log_novo->cad != 0){
+    cont->cont_segundos_cad += dif_segundo; 
+  }
+
+  return cad; 
+
+}
+
+double processando_speed_med(log_t  *log_novo, log_t *log_velho, contadores_t *cont){
+
+  int dif_segundo;
+  double vel_med;
+
+  dif_segundo =  log_novo->tempo - log_velho->tempo;
+  vel_med = log_velho->vel_max * dif_segundo;
+  if (log_novo->vel_max != 0){
+    cont->cont_segundos_vel += dif_segundo; 
+  }
+
+  return vel_med; 
+
+}
+
+int processando_heart_rate_med(log_t  *log_novo, log_t *log_velho, contadores_t *cont){
+   int dif_segundo, hr_med;
+
+  dif_segundo =  log_novo->tempo - log_velho->tempo;
+  hr_med = log_velho->hr_max * dif_segundo;
+  if (log_novo->hr_max != 0){
+    cont->cont_segundos_hr += dif_segundo; 
+  }
+
+  return hr_med; 
+}
+
+void processando_dados(Bicicleta_t *bikes, int aux, log_t  *log_novo, log_t *log_velho, contadores_t *cont){
+
+  double vel_med =0;
+  int cad = 0, hr = 0;
+
+  bikes[aux].informacoes[bikes[aux].cont_log].sub_acumulada += processando_altitude(log_novo,log_velho);
+  bikes[aux].informacoes[bikes[aux].cont_log].vel_max = processando_speed(log_novo,log_velho);
+  bikes[aux].informacoes[bikes[aux].cont_log].hr_max = processando_heart_rate(log_novo,log_velho);
+
+  vel_med += processando_speed_med(log_novo,log_velho,cont);
+  cad += processando_cadence(log_novo,log_velho,cont);
+  hr += processando_heart_rate_med(log_novo,log_velho,cont);
+
+  bikes[aux].informacoes[bikes[aux].cont_log].vel_med = vel_med/cont->cont_segundos_vel;
+  bikes[aux].informacoes[bikes[aux].cont_log].cad = cad/cont->cont_segundos_cad;
+  bikes[aux].informacoes[bikes[aux].cont_log].hr_med = hr/cont->cont_segundos_hr;
+
+}
+
+void le_bloco_de_log(char *line, log_t log_novo, FILE *arq){
+
+  char *pt;
+
+    while ((strcmp(line,"\n") == 0) || (feof (arq))){
+
+        pt = strtok(line, ": ");
+
+        if (!strcmp(pt,"timestamp")){
+            lendo_timestamp(pt, log_novo);
+        }
+        
+        if (!strcmp(pt,"distance")){
+         log_novo.distance = lendo_distance(pt);
+        }
+
+        if (!strcmp(pt,"heart_rate")){
+            log_novo.hr_max = lendo_heart_rate(pt);
+        }
+
+        if (!strcmp(pt,"speed")){
+            log_novo.vel_max = lendo_speed(pt);
+        }
+
+        if (!strcmp(pt,"altitude")){
+            log_novo.sub_acumulada = lendo_altitude(pt);
+        }
+
+        if (!strcmp(pt,"cadence")){
+            log_novo.cad = lendo_cadence(pt);
+        }
+
+        fgets (line, LINESIZE, arq);   // tenta ler a próxima linha
+    }
+
+}
+/*
+void inicializando_aux_log(log_t  *log_novo, log_t *log_velho){
+
+  log_novo->tempo = 0;
+  log_novo->hr_med= 0;
+  log_novo->hr_max = 0;
+  log_novo->cad = 0;
+  log_novo->distance = 0;
+  log_novo->vel_med = 0;
+  log_novo->vel_max = 0;
+  log_novo->sub_acumulada = 0;
+
+  log_velho->tempo = 0;
+  log_velho->hr_med= 0;
+  log_velho->hr_max = 0;
+  log_velho->cad = 0;
+  log_velho->distance = 0;
+  log_velho->vel_med = 0;
+  log_velho->vel_max = 0;
+  log_velho->sub_acumulada = 0;
+}*/
+
+void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq, contadores_t *cont){
+
+    strcpy(bikes[aux].informacoes[bikes[aux].cont_log].nome_log,arquivo);
+    char *line = malloc (sizeof(char)*LINESIZE);
+
+    log_t  log_novo; 
+    log_t log_velho;
+
+  log_novo.tempo = 0;
+  log_novo.hr_med= 0;
+  log_novo.hr_max = 0;
+  log_novo.cad = 0;
+  log_novo.distance = 0;
+  log_novo.vel_med = 0;
+  log_novo.vel_max = 0;
+  log_novo.sub_acumulada = 0;
+
+  log_velho.tempo = 0;
+  log_velho.hr_med= 0;
+  log_velho.hr_max = 0;
+  log_velho.cad = 0;
+  log_velho.distance = 0;
+  log_velho.vel_med = 0;
+  log_velho.vel_max = 0;
+  log_velho.sub_acumulada = 0;
+
+    fgets (line, LINESIZE, arq);
+    le_bloco_de_log(line, log_velho, arq);
+    int  i = 0;
+    while (! feof (arq)){
+      printf("%d: %s\n", i, arquivo);
+      le_bloco_de_log(line, log_novo,arq);
+      processando_dados(bikes,aux, &log_novo, &log_velho, cont);
+      log_velho = log_novo;
+      fgets (line, LINESIZE, arq);   //lendo a próxima linha
+      i++;
+    }
+
+    bikes[aux].informacoes[bikes[aux].cont_log].distance = log_velho.distance;    
+
+    free(line);
+
+
 }
 
 void adicionar_bike(Bicicleta_t *bikes, contadores_t *cont, char *nome, int aux){
@@ -563,10 +824,10 @@ void ler_arquivos (struct dirent **arquivos, Bicicleta_t *bikes, contadores_t *c
     aux = checar_nome_bike(bikes, cont, pt);
     if ( aux > cont->cont_bike){
       adicionar_bike(bikes,cont,pt,aux-1);
-      adicionar_log(bikes,aux-1,arquivos[i]->d_name, arq);  
+      adicionar_log(bikes,aux-1,arquivos[i]->d_name, arq,cont);  
     }
     else {
-      adicionar_log(bikes,aux,arquivos[i]->d_name, arq);
+      adicionar_log(bikes,aux,arquivos[i]->d_name, arq,cont);
     }
       
     // fecha o arquivo

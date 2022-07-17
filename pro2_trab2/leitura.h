@@ -38,13 +38,18 @@ typedef struct contadores_t{
     
     int quantidade_log;
     int cont_bike;
+    int cont_segundos_cad;
+    int cont_segundos_vel;
+    int cont_segundos_hr;
 
 }contadores_t;
 
 typedef struct elev_dado_t{
+
     int id_bike;
     int id_log;
     double elev;
+
 }elev_dado_t;
 
 
@@ -64,7 +69,8 @@ int histograma(Bicicleta_t *bikes, contadores_t *cont,int id_bike);
 
 int checar_nome_bike(Bicicleta_t *bikes, contadores_t *cont, char *nome);
 void adicionar_bike(Bicicleta_t *bikes, contadores_t *cont, char *nome, int aux);
-void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq);
+// void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq);
+void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq, contadores_t *cont);
 
 void ler_arquivos (struct dirent **arquivos, Bicicleta_t *bikes, contadores_t *cont);
 int filtro (const struct dirent *dir);

@@ -6,6 +6,9 @@ int main(int argc, char **argv){
   contadores_t cont;
   cont.cont_bike = 0;
   cont.quantidade_log = 0;
+  cont.cont_segundos_cad = 1;
+  cont.cont_segundos_vel = 1;
+  cont.cont_segundos_hr = 1;
 
 
   char d_home[LINESIZE];
