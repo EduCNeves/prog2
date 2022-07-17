@@ -6,6 +6,9 @@ int main(int argc, char **argv){
   contadores_t cont;
   cont.cont_bike = 0;
   cont.quantidade_log = 0;
+  cont.cont_segundos_cad = 1;
+  cont.cont_segundos_vel = 1;
+  cont.cont_segundos_hr = 1;
 
 
   char d_home[LINESIZE];
@@ -40,11 +43,10 @@ int main(int argc, char **argv){
 
   for (int i=0; i<cont.quantidade_log; i++){
     bikes[i].nome_bike = malloc (sizeof(char)*LINESIZE);
-    //printf("%p\n", bikes[i].nome_bike);
     bikes[i].informacoes = malloc (sizeof(log_t)*cont.quantidade_log);
     bikes[i].cont_log = 0;
     for (int l = 0; l < cont.quantidade_log; l++){
-      bikes[i].informacoes[l].tempo = 0;
+      bikes[i].informacoes[l].tempo = 1;
       bikes[i].informacoes[l].distance = 0;
       bikes[i].informacoes[l].hr_max = 0;
       bikes[i].informacoes[l].vel_max = 0;
@@ -62,7 +64,6 @@ int main(int argc, char **argv){
 
   int fim = 1;
   while (fim != 0){
-    //system("clear");
     fim = imiprir_menu(fim, bikes, &cont);
   }
   printf("Obrigado por ter usado o programa\n");

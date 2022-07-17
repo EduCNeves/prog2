@@ -93,6 +93,14 @@ int lista_data(Bicicleta_t *bikes, contadores_t *cont){
       printf ("elev(m):%-5.2lf\n", bikes[i].informacoes[l].sub_acumulada);
     }
     printf("\n");
+    ordenar_por_distancia(bikes,cont);
+    double dis_medio;
+    dis_medio = media_distancia(bikes,cont, i);
+
+    printf("Quandidade de atividades: %d\n", bikes[i].cont_log);
+    printf("Total Percorrido em km: %-5.2lf\n", bikes[i].informacoes[bikes[i].cont_log-1].distance);
+    printf("Distância Média em km: %-5.2lf\n", dis_medio);
+    printf("\n");
   }
 
   int op;
@@ -121,6 +129,14 @@ int lista_distancia(Bicicleta_t *bikes, contadores_t *cont){
       printf ("elev(m):%-5.2lf\n", bikes[i].informacoes[l].sub_acumulada);
     }
     printf("\n");
+    ordenar_por_distancia(bikes,cont);
+    double dis_medio;
+    dis_medio = media_distancia(bikes,cont, i);
+
+    printf("Quandidade de atividades: %d\n", bikes[i].cont_log);
+    printf("Total Percorrido em km: %-5.2lf\n", bikes[i].informacoes[bikes[i].cont_log-1].distance);
+    printf("Distância Média em km: %-5.2lf\n", dis_medio);
+    printf("\n");
   }
 
   int op;
@@ -140,13 +156,24 @@ void mostrar_bike(Bicicleta_t *bikes, contadores_t *cont){
 
 }
 
+double media_distancia(Bicicleta_t *bikes, contadores_t *cont, int id_bike){
+  
+  double dis_medio;
+
+  for (int l = 0; l < bikes[id_bike].cont_log; l++){
+    dis_medio += bikes[id_bike].informacoes[l].distance;
+  }
+
+  return dis_medio/bikes[id_bike].cont_log;
+
+}
+
 int lista_atividades(Bicicleta_t *bikes, contadores_t *cont, int id_bike){
 
     printf("Bicicleta: %s\n", bikes[id_bike].nome_bike);
-    //rintf("Data\t\tDistância(km) \tVelocidade_Média(km/h) \tVelocidade_Máxima(km/h) \tHR_Médio(bpm) \tHR_Máximo(bpm) \tCadência_Média(rpm) \tSubida_Acumulada(m)\n");
     
     for (int l = 0; l < bikes[id_bike].cont_log; l++){
-      printf("%s ", bikes[id_bike].informacoes[l].nome_log);
+      printf("%d: %s ",l, bikes[id_bike].informacoes[l].nome_log);
       printf ("%s ", bikes[id_bike].informacoes[l].data); 
       printf ("cad(rpm):%d ", bikes[id_bike].informacoes[l].cad);
       printf("hr_med(bpm):%d ",bikes[id_bike].informacoes[l].hr_med);
@@ -156,6 +183,14 @@ int lista_atividades(Bicicleta_t *bikes, contadores_t *cont, int id_bike){
       printf("dist(km):%-5.2lf ",bikes[id_bike].informacoes[l].distance);
       printf ("elev(m):%-5.2lf\n", bikes[id_bike].informacoes[l].sub_acumulada);
     }
+
+  printf("\n");
+  ordenar_por_distancia(bikes,cont);
+  double dis_medio;
+  dis_medio = media_distancia(bikes,cont, id_bike);
+  printf("Quandidade de atividades: %d\n", bikes[id_bike].cont_log);
+  printf("Total Percorrido em km: %-5.2lf\n", bikes[id_bike].informacoes[bikes[id_bike].cont_log-1].distance);
+  printf("Distância Média em km: %-5.2lf\n", dis_medio);
 
   int op;
   printf("\n");
@@ -346,14 +381,13 @@ int imiprir_menu(int fim, Bicicleta_t *bikes, contadores_t *cont){
 
 int flag = 1;
 
-void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq){
+void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq, contadores_t *cont){
 
   strcpy(bikes[aux].informacoes[bikes[aux].cont_log].nome_log,arquivo);
 
   char *line = malloc (sizeof(char)*LINESIZE);
-  int cad_velha,cad_medio,cad,hr_velho,hr_medio;
+  int cad_velha,cad_medio,cad,hr_velho,hr_medio, segundos,horas, minutos, hr,segundo_velho, segundos_atual, dif_segundo;;
   char *pt, *ano, *mes, *dia, *tempo, *h, *m, *s;
-  int segundos,horas, minutos, hr,segundo_velho, segundos_atual, dif_segundo, cont_segundos;
   double distance,vel,alt_novo,alt_velho, vel_medio, vel_velho;
 
   fgets (line, LINESIZE, arq);
@@ -387,39 +421,30 @@ void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq){
       segundos = atoi(s); 
       segundos = horas+minutos+segundos;
 
-
-      //media de velhocidade
       segundo_velho = bikes[aux].informacoes[bikes[aux].cont_log].tempo;
       segundos_atual = segundos;
-      
-      if (segundo_velho == 0){
-        dif_segundo = 1;
-      }
-      else{
-        dif_segundo = segundos_atual - segundo_velho;
-      }
-
       bikes[aux].informacoes[bikes[aux].cont_log].tempo = segundos;
 
+      dif_segundo = segundos_atual - segundo_velho;
+
+
       //velocidade media
-      if (vel_velho != 0 ){
-        vel_medio += vel_velho * dif_segundo;
-        cont_segundos +=  dif_segundo;
+      vel_medio += vel_velho * dif_segundo;
+      if (vel_velho != 0){
+        cont->cont_segundos_vel += dif_segundo; 
       }
 
       //cadencia medio
+      cad_medio += cad_velha * dif_segundo;
       if (cad_velha != 0 ){
-        cad_medio += cad_velha * dif_segundo;
-        cont_segundos +=  dif_segundo;
+        cont->cont_segundos_cad += dif_segundo;
       }
 
       //hr medio
+      hr_medio += hr_velho * dif_segundo;
       if (hr_velho != 0 ){
-        hr_medio += hr_velho * dif_segundo;
-        cont_segundos +=  dif_segundo;
+        cont->cont_segundos_hr +=  dif_segundo;
       }
-
-
 
     }
 
@@ -444,6 +469,8 @@ void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq){
       if (bikes[aux].informacoes[bikes[aux].cont_log].hr_max < hr){
           bikes[aux].informacoes[bikes[aux].cont_log].hr_max = hr;
       }
+
+      hr_velho = hr;
     }
 
     if (!strcmp(pt,"speed")){
@@ -499,14 +526,13 @@ void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq){
 
     }
 
-    fgets (line, LINESIZE, arq);   // tenta ler a próxima linha
-    //i++ ;
+    fgets (line, LINESIZE, arq); //lebo a próxima linha
     //flag = 0;
   }
 
-  bikes[aux].informacoes[bikes[aux].cont_log].vel_med = vel_medio/cont_segundos;
-  bikes[aux].informacoes[bikes[aux].cont_log].hr_max = hr_medio/cont_segundos;
-  bikes[aux].informacoes[bikes[aux].cont_log].cad = cad_medio/cont_segundos;
+  bikes[aux].informacoes[bikes[aux].cont_log].vel_med = vel_medio/cont->cont_segundos_vel;
+  bikes[aux].informacoes[bikes[aux].cont_log].hr_med = hr_medio/cont->cont_segundos_hr;
+  bikes[aux].informacoes[bikes[aux].cont_log].cad = cad_medio/cont->cont_segundos_cad;
 
 
   bikes[aux].cont_log++;
@@ -563,10 +589,10 @@ void ler_arquivos (struct dirent **arquivos, Bicicleta_t *bikes, contadores_t *c
     aux = checar_nome_bike(bikes, cont, pt);
     if ( aux > cont->cont_bike){
       adicionar_bike(bikes,cont,pt,aux-1);
-      adicionar_log(bikes,aux-1,arquivos[i]->d_name, arq);  
+      adicionar_log(bikes,aux-1,arquivos[i]->d_name, arq,cont);  
     }
     else {
-      adicionar_log(bikes,aux,arquivos[i]->d_name, arq);
+      adicionar_log(bikes,aux,arquivos[i]->d_name, arq,cont);
     }
       
     // fecha o arquivo
