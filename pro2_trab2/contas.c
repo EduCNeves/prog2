@@ -1,4 +1,4 @@
-void processando_timestamp(char *pt, log_t  aux_dados){
+void contas_timestamp(char *pt, log_t  aux_dados){
 
     char *ano, *mes, *dia, *tempo, *h, *m, *s;
     int segundos,horas, minutos;
@@ -112,6 +112,26 @@ int lendo_cadence(char *pt){
       cad_velha = cad;*/
 }
 
+// processando_distance(log_novo){}
+processando_altitude(){}
+processando_cadence(){
+
+  
+
+}
+processando_heart_rate(){}
+processando_speed(){}
+processando_speed_med(){}
+processando_heart_rate_med(){}
+
+void processando_dados(log_novo, log_velho){
+
+  // processando_distance(){}
+  processando_cadence(){}
+
+
+}
+
 le_bloco_de_log(){
 
     while (line != "\n"){
@@ -150,12 +170,14 @@ void adicionar_log(Bicicleta_t *bikes, int aux, char *arquivo, FILE *arq){
     strcpy(bikes[aux].informacoes[bikes[aux].cont_log].nome_log,arquivo);
     char *line = malloc (sizeof(char)*LINESIZE);
 
-    log_t  aux_dados;
-    fgets (line, LINESIZE, arq) ;
-    le_bloco_de_log(line, aux_dados);
+    log_t  log_novo, log_velho;
+    fgets (line, LINESIZE, arq);
+    le_bloco_de_log(line, log_velho, arq);
     while (! feof (arq)){
-
-        fgets (line, LINESIZE, arq);   // tenta ler a próxima linha
+      le_bloco_de_log(line, log_novo);
+      processando_dados(log_novo, log_velho);
+      log_velho = log_novo;
+      fgets (line, LINESIZE, arq);   // tenta ler a próxima linha
         
     }
 
